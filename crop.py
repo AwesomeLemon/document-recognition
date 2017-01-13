@@ -6,20 +6,6 @@ import numpy as np
 imshow = False
 
 
-def dilate(ary, N, iterations):
-    """Dilate using an NxN '+' sign shape. ary is np.uint8."""
-    dilated_image = cv2.dilate(ary / 255, np.ones((3, 3)), iterations=iterations)
-    return dilated_image
-    kernel = np.zeros((N, N), dtype=np.uint8)
-    kernel[(N - 1) / 2, :] = 1
-    dilated_image = cv2.dilate(ary / 255, kernel, iterations=iterations)
-
-    kernel = np.zeros((N, N), dtype=np.uint8)
-    kernel[:, (N - 1) / 2] = 1
-    dilated_image = cv2.dilate(dilated_image, kernel, iterations=iterations)
-    return dilated_image
-
-
 def props_for_contours(contours, ary):
     """Calculate bounding box & the number of set pixels for each contour."""
     c_info = []
@@ -54,20 +40,14 @@ def find_border_components(contours, ary):
 
 
 def find_components(edges, max_components=10):
-    """Dilate the image until there are just a few connected components.
-    Returns contours for these components."""
-    # Perform increasingly aggressive dilation until there are just a few
-    # connected components.
+    # Dilate the image until there are just a few connected components.
     count = max_components + 1
-    dilation = 5
     n = 1
     components = None
     while count > max_components:
         n += 1
         dilated_image = cv2.dilate(edges / 255, np.ones((3, 3)), iterations=n)
         components = cv2.connectedComponentsWithStats(dilated_image)
-        # (_, contours, _) = cv2.findContours(dilated_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        # count = len(contours)
         count = components[0]
     if imshow:
         cv2.imshow("Edged", util.resize(edges, height=650))
@@ -87,9 +67,8 @@ def find_number_of_text_pixels_in_crop(img, crop):
     return crop
 
 
-def find_optimal_components_subset_mine(components, edges):
+def find_optimal_components_subset(components, edges):
     total = np.sum(edges / 255)
-    area = edges.shape[0] * edges.shape[1]
     c_info = components_properties(components, edges)
 
     c_info.sort(key=lambda x: -x['sum'])
@@ -100,18 +79,12 @@ def find_optimal_components_subset_mine(components, edges):
     crop = this_crop
     covered_sum = c['sum']
 
-    changed = True
-    # while covered_sum < total and changed:
-    #     changed = False
     for i, c in enumerate(c_info):
         this_crop = c['x1'], c['y1'], c['x2'], c['y2']
         if covered_sum / float(total) < 0.9:
-            print '%d %s -> %s' % (i, covered_sum, covered_sum + c['sum'])
+            # print '%d %s -> %s' % (i, covered_sum, covered_sum + c['sum'])
             crop = union_crops(crop, this_crop)
             covered_sum += c['sum']
-            # del c_info[i]
-            changed = True
-            # break
         else:
             break
 
@@ -139,18 +112,18 @@ def crop(path, out_path, show=False):
 
     edges = cv2.Canny(im, 30, 200)
     edges = 255 * (edges > 0).astype(np.uint8)
-    edges_cp = cv2.medianBlur(edges, 5)
+    edges_blurred = cv2.medianBlur(edges, 5)
 
-    components = find_components(edges_cp)
+    components = find_components(edges_blurred)
     if components[0] == 0:
         print '%s -> (no text!)' % path
         return
-    crop = find_optimal_components_subset_mine(components, edges)
+    crop = find_optimal_components_subset(components, edges)
 
     crop = [int(x * scale) for x in crop]  # upscale to the original image size.
     orig_im = orig_im[crop[1]:crop[3], crop[0]: crop[2]]
     cv2.imwrite(out_path, orig_im)
-    print '%s -> %s' % (path, out_path)
+    # print '%s -> %s' % (path, out_path)
 
 
 # crop("no_noise.jpg", "scan_res.jpg", True)

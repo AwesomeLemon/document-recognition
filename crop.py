@@ -123,7 +123,5 @@ def crop(path, out_path, show=False):
     crop = [int(x * scale) for x in crop]  # upscale to the original image size.
     orig_im = orig_im[crop[1]:crop[3], crop[0]: crop[2]]
     cv2.imwrite(out_path, orig_im)
-    # print '%s -> %s' % (path, out_path)
-
 
 # crop("no_noise.jpg", "scan_res.jpg", True)

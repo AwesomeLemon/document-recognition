@@ -1,0 +1,12 @@
+photos\\bad.jpg
+photos\\chom1.jpg
+photos\\chom2.jpg
+photos\\chom3.jpg
+photos\\chom4.jpg
+photos\\font1.jpg
+photos\\font2.jpg
+photos\\ital.jpg
+photos\\tough1.jpg
+photos\\tough3.jpg
+photos\\tough5.jpg
+photos\\tough6.jpg

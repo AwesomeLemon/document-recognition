@@ -10,7 +10,7 @@ import cv2
 def scan(imgname="chom4.jpg", show=True):
 
 
-    path = imgname #args["image"]
+    path = imgname
     image = cv2.imread(path)
     ratio = image.shape[0] / 700.0
     orig = image.copy()
@@ -19,12 +19,10 @@ def scan(imgname="chom4.jpg", show=True):
     gray = cv2.medianBlur(gray, 5)
     edged = cv2.Canny(gray, 40, 150)
 
-
-    # print "STEP 1: Edge Detection"
-
     edged_copy = edged.copy()
     edged_copy = cv2.GaussianBlur(edged_copy, (3, 3), 0)
 
+    cv2.imwrite('edged.jpg', edged)
     if show:
         cv2.imshow("Edged", edged)
         cv2.imshow("Edged blurred", edged_copy)
@@ -52,9 +50,9 @@ def scan(imgname="chom4.jpg", show=True):
             screenCnt = approx
             break
     if screenCnt.__len__() != 0:
-        # print "STEP 2: Find contours of paper"
         if show:
             cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+            cv2.imwrite('outlined.jpg', image)
             cv2.imshow("Outline", image)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -66,11 +64,9 @@ def scan(imgname="chom4.jpg", show=True):
     warped = threshold_adaptive(warped, 251, offset=10)
     warped = warped.astype("uint8") * 255
 
-    # show the original and scanned images
-    # print "STEP 3: Apply perspective transform"
     if show:
         cv2.imshow("Original", util.resize(orig, height=650))
         cv2.imshow("Scanned", util.resize(warped, height=650))
         cv2.waitKey(0)
-    cv2.imwrite('res.jpg', warped)
+    cv2.imwrite('deskewed.jpg', warped)
 # scan()

@@ -14,4 +14,4 @@ More info at https://awesomelemon.github.io/2017/01/15/Document-recognition-with
 ### Example
 python .\recognize.py -i photos\chom4.jpg -c texts\chom.txt -o output.txt
 ## Dependencies
-OpenCV, Scikit, Scipy, Numpy+mkl, Tesseract, pytesseract, jellyfish.
+OpenCV 3, Scikit, Scipy, Numpy+mkl, Tesseract, pytesseract, jellyfish.

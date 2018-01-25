@@ -1,0 +1,14 @@
+# Personal / Dev
+.idea
+_dev/
+_archive/
+ignored/
+output/
+
+# Mac
+*.DS_Store
+
+
+# Python
+__pycache__
+*.pyc

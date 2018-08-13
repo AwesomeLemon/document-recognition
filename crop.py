@@ -7,7 +7,7 @@ imshow = False
 
 
 def props_for_contours(contours, ary):
-    """Calculate bounding box & the number of set pixels for each contour."""
+    '''Calculate bounding box & the number of set pixels for each contour.'''
     c_info = []
     for c in contours:
         x, y, w, h = cv2.boundingRect(c)
@@ -50,8 +50,8 @@ def find_components(edges, max_components=10):
         components = cv2.connectedComponentsWithStats(dilated_image)
         count = components[0]
     if imshow:
-        cv2.imshow("Edged", util.resize(edges, height=650))
-        cv2.imshow("Edged dilated", util.resize(255 * dilated_image, height=650))
+        cv2.imshow('Edged', util.resize(edges, height=650))
+        cv2.imshow('Edged dilated', util.resize(255 * dilated_image, height=650))
         cv2.waitKey(0)
         cv2.destroyAllWindows()
     return components
@@ -124,4 +124,4 @@ def crop(path, out_path, show=False):
     orig_im = orig_im[crop[1]:crop[3], crop[0]: crop[2]]
     cv2.imwrite(out_path, orig_im)
 
-# crop("no_noise.jpg", "scan_res.jpg", True)
+# crop('no_noise.jpg', 'scan_res.jpg', True)

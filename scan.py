@@ -7,7 +7,7 @@ import argparse
 import cv2
 
 
-def scan(imgname="chom4.jpg", show=True):
+def scan(imgname='chom4.jpg', show=True):
 
 
     path = imgname
@@ -24,8 +24,8 @@ def scan(imgname="chom4.jpg", show=True):
 
     cv2.imwrite('edged.jpg', edged)
     if show:
-        cv2.imshow("Edged", edged)
-        cv2.imshow("Edged blurred", edged_copy)
+        cv2.imshow('Edged', edged)
+        cv2.imshow('Edged blurred', edged_copy)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -44,7 +44,7 @@ def scan(imgname="chom4.jpg", show=True):
         debugging = False
         if debugging:
             cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
-            cv2.imshow("Outline", image)
+            cv2.imshow('Outline', image)
             cv2.waitKey(0)
         if len(approx) == 4:
             screenCnt = approx
@@ -53,7 +53,7 @@ def scan(imgname="chom4.jpg", show=True):
         if show:
             cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
             cv2.imwrite('outlined.jpg', image)
-            cv2.imshow("Outline", image)
+            cv2.imshow('Outline', image)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
@@ -62,11 +62,11 @@ def scan(imgname="chom4.jpg", show=True):
 
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
     warped = warped > threshold_local(warped, 251, offset=10)
-    warped = warped.astype("uint8") * 255
+    warped = warped.astype('uint8') * 255
 
     if show:
-        cv2.imshow("Original", util.resize(orig, height=650))
-        cv2.imshow("Scanned", util.resize(warped, height=650))
+        cv2.imshow('Original', util.resize(orig, height=650))
+        cv2.imshow('Scanned', util.resize(warped, height=650))
         cv2.waitKey(0)
     cv2.imwrite('deskewed.jpg', warped)
 # scan()

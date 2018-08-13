@@ -4,7 +4,7 @@ import cv2
 
 def order_points(pts):
     # order will be: top-left, top-right, bottom-right, bottom-left
-    rect = np.zeros((4, 2), dtype="float32")
+    rect = np.zeros((4, 2), dtype='float32')
 
     # the top-left point will have the smallest sum,
     # the bottom-right point will have the largest sum
@@ -37,7 +37,7 @@ def four_point_transform(image, pts):
         [0, 0],
         [maxWidth - 1, 0],
         [maxWidth - 1, maxHeight - 1],
-        [0, maxHeight - 1]], dtype="float32")
+        [0, maxHeight - 1]], dtype='float32')
 
     M = cv2.getPerspectiveTransform(rect, dst)
     warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))

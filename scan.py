@@ -2,7 +2,7 @@
 # import the necessary packages
 import util
 from transform import four_point_transform
-from skimage.filters import threshold_adaptive
+from skimage.filters import threshold_adaptive, threshold_local
 import argparse
 import cv2
 
@@ -61,7 +61,7 @@ def scan(imgname="chom4.jpg", show=True):
         warped = orig
 
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-    warped = threshold_adaptive(warped, 251, offset=10)
+    warped = warped > threshold_local(warped, 251, offset=10)
     warped = warped.astype("uint8") * 255
 
     if show:

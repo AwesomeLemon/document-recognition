@@ -54,13 +54,13 @@ if __name__ == '__main__':
     # example usage:
     #python .\recognize.py -i photos\chom4.jpg -c texts\chom.txt -o output.txt
     ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--image", required=True,
+    ap.add_argument("-i", "--image", required=False, default='photos/chom4.jpg',
                     help="Path to the image to be scanned")
-    ap.add_argument("-o", "--output", required=True,
+    ap.add_argument("-o", "--output", required=False, default='output.txt',
                     help="Path for the output text file")
-    ap.add_argument("-c", "--check", required=True,
+    ap.add_argument("-c", "--check", required=False,  default='texts/chom.txt',
                     help="Path to the file with reference text")
-    ap.add_argument("-s", "--show", required=False,
+    ap.add_argument("-s", "--show", required=False, default=True,
                     help="Show intermediate results", dest='show', action='store_true')
     args = vars(ap.parse_args())
     recognize(imgname=args['image'],

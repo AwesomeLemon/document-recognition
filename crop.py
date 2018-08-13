@@ -46,7 +46,7 @@ def find_components(edges, max_components=10):
     components = None
     while count > max_components:
         n += 1
-        dilated_image = cv2.dilate(edges / 255, np.ones((3, 3)), iterations=n)
+        dilated_image = cv2.convertScaleAbs(cv2.dilate(edges / 255, np.ones((3, 3)), iterations=n))
         components = cv2.connectedComponentsWithStats(dilated_image)
         count = components[0]
     if imshow:
@@ -116,7 +116,7 @@ def crop(path, out_path, show=False):
 
     components = find_components(edges_blurred)
     if components[0] == 0:
-        print '%s -> (no text!)' % path
+        print('%s -> (no text!)' % path)
         return
     crop = find_optimal_components_subset(components, edges)
 

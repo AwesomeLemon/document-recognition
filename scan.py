@@ -1,23 +1,25 @@
 # coding=utf-8
-# import the necessary packages
 import util
 from transform import four_point_transform
-from skimage.filters import threshold_adaptive, threshold_local
-import argparse
+from skimage.filters import threshold_local
 import cv2
 
 
-def scan(imgname='chom4.jpg', show=True):
+def scan(im_path='chom4.jpg', show=True):
+    im = cv2.imread(im_path)
+    orig = im.copy()
 
+    downscaled_height = 700.0
+    im, scale = util.downscale(im, downscaled_height)
 
-    path = imgname
-    image = cv2.imread(path)
-    ratio = image.shape[0] / 700.0
-    orig = image.copy()
-    image = util.resize(image, height=700)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    gray = cv2.medianBlur(gray, 5)
-    edged = cv2.Canny(gray, 40, 150)
+    gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+
+    kern_size = 5
+    gray_blurred = cv2.medianBlur(gray, kern_size)
+
+    threshold_lower = 40
+    threshold_upper = 150
+    edged = cv2.Canny(gray_blurred, threshold_lower, threshold_upper)
 
     edged_copy = edged.copy()
     edged_copy = cv2.GaussianBlur(edged_copy, (3, 3), 0)
@@ -40,23 +42,23 @@ def scan(imgname='chom4.jpg', show=True):
         approx = cv2.approxPolyDP(c, 0.015 * peri, True)
         # approx = np.array(cv2.boundingRect(c))
         # if our approximated contour has four points, then we
-        # can assume that we have found our screen
+        # can assume that we have found our target
         debugging = False
         if debugging:
-            cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
-            cv2.imshow('Outline', image)
+            cv2.drawContours(im, [approx], -1, (0, 255, 0), 2)
+            cv2.imshow('Outline', im)
             cv2.waitKey(0)
         if len(approx) == 4:
             screenCnt = approx
             break
     if screenCnt.__len__() != 0:
         if show:
-            cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
-            cv2.imwrite('outlined.jpg', image)
-            cv2.imshow('Outline', image)
+            cv2.drawContours(im, [screenCnt], -1, (0, 255, 0), 2)
+            cv2.imwrite('outlined.jpg', im)
+            cv2.imshow('Outline', im)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-        warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
+        warped = four_point_transform(orig, screenCnt.reshape(4, 2) * scale)
     else:
         warped = orig
 

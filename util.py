@@ -15,3 +15,9 @@ def resize(image, width=None, height=None):
         dim = (width, int(h * r))
     resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
     return resized
+
+
+def downscale(orig_im, downscaled_height):
+    scale = orig_im.shape[0] / downscaled_height
+    im = resize(orig_im, height=int(downscaled_height))
+    return im, scale

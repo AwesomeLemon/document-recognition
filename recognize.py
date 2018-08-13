@@ -18,10 +18,8 @@ def recognize(imgname='photos\\tough6.jpg', output='output.txt', desired='texts\
     cv2.imwrite(newimgname, img)
     crop(newimgname, "scan_res.jpg", show_intermediate_results)
     a = pytesseract.image_to_string(Image.open('scan_res.jpg'), config="config")
-    f = open(output, 'w+')
-    print(a, file=f)
-    f.flush()
-    f.close()
+    with open(output, 'w+') as f:
+        print(a, file=f)
     print('Accuracy: ' + str(test_accuracy(scan_res=output, desired=desired)))
 
 
@@ -31,6 +29,7 @@ def recognize_many(img_names_file):
     names = [x.strip() for x in names]
     for name in names:
         output = name + 'output.txt'
+        #several photos have the same desired text
         desired = 'chom.txt'
         if 'tough' in name:
             desired = 'chom_tough.txt'

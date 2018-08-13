@@ -5,7 +5,7 @@ from skimage.filters import threshold_local
 import cv2
 
 
-def scan(im_path='chom4.jpg', show=True):
+def scan(im_path, show=True):
     im = cv2.imread(im_path)
     orig = im.copy()
 
